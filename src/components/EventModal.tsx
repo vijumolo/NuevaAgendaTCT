@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar as CalendarIcon, MapPin, DollarSign, Wallet, FileText, User, Tag, Ticket, Phone } from 'lucide-react';
+import { X, Calendar as CalendarIcon, MapPin, DollarSign, Wallet, FileText, User, Tag, Ticket, Phone, ImagePlus, Loader2 } from 'lucide-react';
 import type { TCTEvent, EventType, ChipType } from '../types';
 import { format } from 'date-fns';
+import { useEventStore } from '../store/useEventStore';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -19,7 +20,9 @@ export const EventModal: React.FC<EventModalProps> = ({
   isOpen, onClose, onSave, onDelete, initialDate, eventToEdit
 }) => {
   const [formData, setFormData] = useState<Partial<TCTEvent>>({});
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const { uploadEventImage } = useEventStore();
   useEffect(() => {
     if (isOpen) {
       if (eventToEdit) {
@@ -39,6 +42,7 @@ export const EventModal: React.FC<EventModalProps> = ({
           observations: ''
         });
       }
+      setImageFile(null);
     }
   }, [isOpen, eventToEdit, initialDate]);
 
@@ -54,9 +58,26 @@ export const EventModal: React.FC<EventModalProps> = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData as Omit<TCTEvent, 'id' | 'createdAt'>);
+    setIsUploading(true);
+    
+    let finalImageUrl = formData.imageUrl;
+    
+    // Si hay un archivo nuevo, lo subimos
+    if (imageFile) {
+      const uploadedUrl = await uploadEventImage(imageFile);
+      if (uploadedUrl) {
+        finalImageUrl = uploadedUrl;
+      }
+    }
+
+    onSave({
+      ...(formData as Omit<TCTEvent, 'id' | 'createdAt'>),
+      imageUrl: finalImageUrl
+    });
+    
+    setIsUploading(false);
     onClose();
   };
 
@@ -244,6 +265,52 @@ export const EventModal: React.FC<EventModalProps> = ({
             />
           </div>
 
+          {/* Image Upload */}
+          <div>
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
+              <ImagePlus size={16} className="text-pink-500" /> Banner / Imagen del Evento
+            </label>
+            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-xl bg-white/50 hover:bg-slate-50 transition-colors relative">
+              <div className="space-y-1 text-center">
+                {(imageFile || formData.imageUrl) ? (
+                  <div className="relative inline-block group">
+                    <img 
+                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl} 
+                      alt="Preview" 
+                      className="mx-auto h-32 w-auto object-cover rounded-lg shadow-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageFile(null);
+                        setFormData(prev => ({ ...prev, imageUrl: '' }));
+                      }}
+                      className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <ImagePlus className="mx-auto h-12 w-12 text-slate-400" />
+                    <div className="flex text-sm text-slate-600 justify-center">
+                      <label className="relative cursor-pointer bg-transparent rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                        <span>Sube una imagen</span>
+                        <input type="file" className="sr-only" accept="image/*" onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImageFile(e.target.files[0]);
+                          }
+                        }} />
+                      </label>
+                      <p className="pl-1 text-slate-500">o toca aquí</p>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-2">PNG, JPG, GIF hasta 5MB</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Footer Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-slate-200">
             {eventToEdit && onDelete ? (
@@ -266,9 +333,10 @@ export const EventModal: React.FC<EventModalProps> = ({
               </button>
               <button 
                 type="submit"
-                className="px-8 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-0.5"
+                disabled={isUploading}
+                className="px-8 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center gap-2"
               >
-                Guardar
+                {isUploading ? <Loader2 size={20} className="animate-spin" /> : 'Guardar'}
               </button>
             </div>
           </div>

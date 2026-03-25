@@ -5,7 +5,7 @@ import {
 } from 'date-fns';
 // import { es } from 'date-fns/locale';
 import type { TCTEvent } from '../types';
-import { Plus } from 'lucide-react';
+import { Plus, Image as ImageIcon } from 'lucide-react';
 import clsx from 'clsx';
 
 interface CalendarGridProps {
@@ -99,12 +99,13 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                       key={evt.id}
                       onClick={() => onEditEvent(evt)}
                       className={clsx(
-                        "text-xs font-semibold py-1.5 px-2 rounded-lg cursor-pointer truncate shadow-sm hover:-translate-y-0.5 transition-transform",
+                        "text-xs font-semibold py-1.5 px-2 rounded-lg cursor-pointer shadow-sm hover:-translate-y-0.5 transition-transform flex items-center justify-between gap-1",
                         getBadgeColor(evt.eventType)
                       )}
                       title={`${evt.name} - ${evt.responsible}`}
                     >
-                      {evt.name}
+                      <span className="truncate">{evt.name}</span>
+                      {evt.imageUrl && <ImageIcon size={12} className="shrink-0 opacity-80" />}
                     </div>
                   ))}
                 </div>

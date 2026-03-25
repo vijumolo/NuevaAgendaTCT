@@ -14,5 +14,6 @@ export interface TCTEvent {
   advancePayment: number;
   location: string;
   observations: string;
+  imageUrl?: string;
   createdAt: string;
 }

@@ -12,6 +12,7 @@ interface EventState {
   deleteEvent: (id: string) => Promise<void>;
   getEventsByDateRange: (start: Date, end: Date) => TCTEvent[];
   getEventsByMonth: (year: number, month: number) => TCTEvent[];
+  uploadEventImage: (file: File) => Promise<string | null>;
 }
 
 export const useEventStore = create<EventState>()((set, get) => ({
@@ -107,5 +108,29 @@ export const useEventStore = create<EventState>()((set, get) => ({
       const eventDate = new Date(`${startDateString}T00:00:00`);
       return eventDate.getFullYear() === year && eventDate.getMonth() === month;
     });
+  },
+
+  uploadEventImage: async (file: File) => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('event-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Error al subir la imagen a Supabase.');
+      return null;
+    }
   },
 }));
