@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({ currentDate, onPrevMonth, onNext
         <div className="flex items-center gap-6">
           <div className="w-24 h-24 bg-white/10 rounded-2xl p-2 backdrop-blur-md border border-white/20 shadow-xl flex items-center justify-center shrink-0">
             <img 
-              src="/Logo/LOGO TCT TRASPARENTE.png" 
+              src={`${import.meta.env.BASE_URL}Logo/LOGO TCT TRASPARENTE.png`}
               alt="TCT Colombia" 
               className="w-full h-full object-contain filter drop-shadow-md"
             />
