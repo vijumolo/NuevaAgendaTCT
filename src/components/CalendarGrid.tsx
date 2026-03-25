@@ -99,13 +99,19 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                       key={evt.id}
                       onClick={() => onEditEvent(evt)}
                       className={clsx(
-                        "text-xs font-semibold py-1.5 px-2 rounded-lg cursor-pointer shadow-sm hover:-translate-y-0.5 transition-transform flex items-center justify-between gap-1",
+                        "text-xs py-1 px-1.5 rounded-lg cursor-pointer shadow-sm hover:-translate-y-0.5 transition-transform flex items-center gap-2",
                         getBadgeColor(evt.eventType)
                       )}
                       title={`${evt.name} - ${evt.responsible}`}
                     >
-                      <span className="truncate">{evt.name}</span>
-                      {evt.imageUrl && <ImageIcon size={12} className="shrink-0 opacity-80" />}
+                      {evt.imageUrl && (
+                        <img 
+                          src={evt.imageUrl} 
+                          alt="" 
+                          className="w-5 h-5 rounded object-cover shrink-0 ring-1 ring-white/30" 
+                        />
+                      )}
+                      <span className="truncate font-semibold">{evt.name}</span>
                     </div>
                   ))}
                 </div>
