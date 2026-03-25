@@ -34,9 +34,11 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
       case 'MTB': return 'bg-emerald-500 text-white shadow-emerald-500/40';
       case 'Ruta': return 'bg-blue-500 text-white shadow-blue-500/40';
       case 'Atletismo': return 'bg-orange-500 text-white shadow-orange-500/40';
+      case 'Running': return 'bg-rose-500 text-white shadow-rose-500/40';
       case 'Trail': return 'bg-amber-600 text-white shadow-amber-600/40';
       case 'Duatlón': return 'bg-purple-500 text-white shadow-purple-500/40';
       case 'Triatlón': return 'bg-indigo-500 text-white shadow-indigo-500/40';
+      case 'Otros': return 'bg-slate-600 text-white shadow-slate-600/40';
       default: return 'bg-slate-500 text-white shadow-slate-500/40';
     }
   };
@@ -94,15 +96,18 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
                 {/* Event Markers */}
                 <div className="absolute top-10 w-full left-0 px-2 flex flex-col gap-1 max-h-[90px] overflow-y-auto custom-scrollbar pr-1">
-                  {dayEvents.map(evt => (
+                  {dayEvents.map(evt => {
+                    const isPast = new Date(`${evt.startDate.includes('T') ? evt.startDate.split('T')[0] : evt.startDate}T00:00:00`) < new Date(new Date().setHours(0,0,0,0));
+                    return (
                     <div 
                       key={evt.id}
                       onClick={() => onEditEvent(evt)}
                       className={clsx(
                         "text-xs py-1 px-1.5 rounded-lg cursor-pointer shadow-sm hover:-translate-y-0.5 transition-transform flex items-center gap-2",
-                        getBadgeColor(evt.eventType)
+                        getBadgeColor(evt.eventType),
+                        isPast && "opacity-60 saturate-50 line-through decoration-white/50"
                       )}
-                      title={`${evt.name} - ${evt.responsible}`}
+                      title={`${evt.name} - ${evt.responsible}${isPast ? ' (Finalizado)' : ''}`}
                     >
                       {evt.imageUrl && (
                         <img 
@@ -113,7 +118,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                       )}
                       <span className="truncate font-semibold">{evt.name}</span>
                     </div>
-                  ))}
+                  )})}
                 </div>
               </div>
             );
