@@ -4,7 +4,7 @@ import { FinancialSummary } from './components/FinancialSummary';
 import { CalendarGrid } from './components/CalendarGrid';
 import { EventModal } from './components/EventModal';
 import { useEventStore } from './store/useEventStore';
-import { addMonths, subMonths } from 'date-fns';
+import { addMonths, subMonths, addDays, format } from 'date-fns';
 import type { TCTEvent } from './types';
 import { Plus, Download } from 'lucide-react';
 import { legacyEvents } from './data/legacyEvents';
@@ -47,6 +47,31 @@ function App() {
   const totalAdvances = currentMonthEvents.reduce((sum, e) => sum + e.advancePayment, 0);
 
   const handleSaveEvent = (eventData: Omit<TCTEvent, 'id' | 'createdAt'>) => {
+    const startStr = eventData.startDate.includes('T') ? eventData.startDate.split('T')[0] : eventData.startDate;
+    const startDateObj = new Date(`${startStr}T00:00:00`);
+    const duration = eventData.durationDays || 1;
+
+    for (let i = 0; i < duration; i++) {
+        const d = addDays(startDateObj, i);
+        let count = 0;
+        for (const ev of events) {
+            if (eventToEdit && ev.id === eventToEdit.id) continue;
+            if (!ev.startDate) continue;
+            
+            const evStartStr = ev.startDate.includes('T') ? ev.startDate.split('T')[0] : ev.startDate;
+            const evStartDate = new Date(`${evStartStr}T00:00:00`);
+            const evEndDate = addDays(evStartDate, Math.max(0, (ev.durationDays || 1) - 1));
+            
+            if (d >= evStartDate && d <= evEndDate) {
+                count++;
+            }
+        }
+        if (count >= 3) {
+            alert(`No se puede guardar: El día ${format(d, 'dd/MM/yyyy')} ya tiene el máximo de 3 eventos permitidos.`);
+            return;
+        }
+    }
+
     if (eventToEdit) {
       updateEvent(eventToEdit.id, eventData);
     } else {

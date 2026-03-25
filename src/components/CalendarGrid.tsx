@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
-  eachDayOfInterval, format, isSameMonth, isToday, isSameDay
+  eachDayOfInterval, format, isSameMonth, isToday, addDays
 } from 'date-fns';
 // import { es } from 'date-fns/locale';
 import type { TCTEvent } from '../types';
@@ -60,10 +60,10 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           {days.map((day) => {
             const dayEvents = events.filter(e => {
               if (!e.startDate) return false;
-              // Parse the YYYY-MM-DD string as a local date by appending time
               const startDateString = e.startDate.includes('T') ? e.startDate.split('T')[0] : e.startDate;
-              const eDate = new Date(`${startDateString}T00:00:00`);
-              return isSameDay(eDate, day); 
+              const eStartDate = new Date(`${startDateString}T00:00:00`);
+              const eEndDate = addDays(eStartDate, Math.max(0, (e.durationDays || 1) - 1));
+              return day >= eStartDate && day <= eEndDate; 
             });
 
             return (
