@@ -5,7 +5,7 @@ import {
 } from 'date-fns';
 // import { es } from 'date-fns/locale';
 import type { TCTEvent } from '../types';
-import { Plus, Image as ImageIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import clsx from 'clsx';
 
 interface CalendarGridProps {
