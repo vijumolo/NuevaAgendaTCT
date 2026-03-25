@@ -13,7 +13,7 @@ interface EventModalProps {
   eventToEdit?: TCTEvent | null;
 }
 
-const EVENT_TYPES: EventType[] = ['MTB', 'Ruta', 'Atletismo', 'Running', 'Trail', 'Duatlón', 'Triatlón', 'Otros'];
+const EVENT_TYPES: EventType[] = ['MTB', 'Ruta', 'Running', 'Trail', 'Duatlón', 'Triatlón', 'Otros'];
 const CHIP_TYPES: ChipType[] = ['Retornable', 'Desechable', 'Sin Chip'];
 
 export const EventModal: React.FC<EventModalProps> = ({

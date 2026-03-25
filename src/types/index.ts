@@ -1,4 +1,4 @@
-export type EventType = 'MTB' | 'Ruta' | 'Atletismo' | 'Running' | 'Trail' | 'Duatlón' | 'Triatlón' | 'Otros';
+export type EventType = 'MTB' | 'Ruta' | 'Running' | 'Trail' | 'Duatlón' | 'Triatlón' | 'Otros' | 'Atletismo';
 export type ChipType = 'Retornable' | 'Desechable' | 'Sin Chip';
 
 export interface TCTEvent {

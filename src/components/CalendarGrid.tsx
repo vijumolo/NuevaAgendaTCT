@@ -33,7 +33,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
     switch (type) {
       case 'MTB': return 'bg-emerald-500 text-white shadow-emerald-500/40';
       case 'Ruta': return 'bg-blue-500 text-white shadow-blue-500/40';
-      case 'Atletismo': return 'bg-orange-500 text-white shadow-orange-500/40';
+      case 'Atletismo':
       case 'Running': return 'bg-rose-500 text-white shadow-rose-500/40';
       case 'Trail': return 'bg-amber-600 text-white shadow-amber-600/40';
       case 'Duatlón': return 'bg-purple-500 text-white shadow-purple-500/40';
