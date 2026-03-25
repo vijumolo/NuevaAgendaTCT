@@ -14,7 +14,7 @@ interface EventModalProps {
 }
 
 const EVENT_TYPES: EventType[] = ['MTB', 'Ruta', 'Running', 'Trail', 'Duatlón', 'Triatlón', 'Otros'];
-const CHIP_TYPES: ChipType[] = ['Retornable', 'Desechable', 'Sin Chip'];
+const CHIP_TYPES: ChipType[] = ['Retornable', 'No Retornable', 'Sin Chip'];
 
 export const EventModal: React.FC<EventModalProps> = ({
   isOpen, onClose, onSave, onDelete, initialDate, eventToEdit
