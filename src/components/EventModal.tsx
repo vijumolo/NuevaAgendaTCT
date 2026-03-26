@@ -104,6 +104,49 @@ export const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Image View / Upload at Top */}
+          <div className="w-full">
+            <div className="flex justify-center p-2 border-2 border-slate-200 border-dashed rounded-2xl bg-slate-50 hover:bg-slate-100/50 transition-colors relative min-h-[200px]">
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                {(imageFile || formData.imageUrl) ? (
+                  <div className="relative inline-block group w-full h-full flex justify-center">
+                    <img 
+                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl} 
+                      alt="Banner Original" 
+                      className="w-full max-h-[600px] object-contain rounded-xl shadow-md bg-transparent"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageFile(null);
+                        setFormData(prev => ({ ...prev, imageUrl: '' }));
+                      }}
+                      className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                      title="Eliminar Imagen"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <ImagePlus className="mx-auto h-16 w-16 text-slate-400 mb-2" />
+                    <div className="flex text-base text-slate-600 justify-center font-medium">
+                      <label className="relative cursor-pointer bg-transparent rounded-md text-blue-600 hover:text-blue-500 transition-colors">
+                        <span>Cargar Banner / Imagen Original</span>
+                        <input type="file" className="sr-only" accept="image/*" onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setImageFile(e.target.files[0]);
+                          }
+                        }} />
+                      </label>
+                    </div>
+                    <p className="text-sm text-slate-400 mt-2">PNG, JPG hasta 5MB</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Left Column */}
@@ -264,54 +307,6 @@ export const EventModal: React.FC<EventModalProps> = ({
               placeholder="Notas adicionales..."
             />
           </div>
-
-          {/* Image Upload */}
-          <div className="md:col-span-2">
-            <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
-              <ImagePlus size={16} className="text-pink-500" /> Banner / Imagen Original del Evento
-            </label>
-            <div className="mt-1 flex justify-center p-2 border-2 border-slate-300 border-dashed rounded-xl bg-slate-50 hover:bg-slate-100/50 transition-colors w-full relative min-h-[150px]">
-              <div className="w-full text-center flex flex-col items-center justify-center">
-                {(imageFile || formData.imageUrl) ? (
-                  <div className="relative inline-block group w-full">
-                    <img 
-                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl} 
-                      alt="Preview" 
-                      className="mx-auto w-full max-h-[500px] object-contain rounded-lg shadow-sm bg-black/5"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImageFile(null);
-                        setFormData(prev => ({ ...prev, imageUrl: '' }));
-                      }}
-                      className="absolute -top-3 -right-3 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <ImagePlus className="mx-auto h-12 w-12 text-slate-400" />
-                    <div className="flex text-sm text-slate-600 justify-center">
-                      <label className="relative cursor-pointer bg-transparent rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                        <span>Sube una imagen</span>
-                        <input type="file" className="sr-only" accept="image/*" onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setImageFile(e.target.files[0]);
-                          }
-                        }} />
-                      </label>
-                      <p className="pl-1 text-slate-500">o toca aquí</p>
-                    </div>
-                    <p className="text-xs text-slate-400 mt-2">PNG, JPG, GIF hasta 5MB</p>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Footer Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-slate-200">
             {eventToEdit && onDelete ? (
               <button 
