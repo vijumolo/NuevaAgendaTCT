@@ -266,18 +266,18 @@ export const EventModal: React.FC<EventModalProps> = ({
           </div>
 
           {/* Image Upload */}
-          <div>
+          <div className="md:col-span-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-1">
-              <ImagePlus size={16} className="text-pink-500" /> Banner / Imagen del Evento
+              <ImagePlus size={16} className="text-pink-500" /> Banner / Imagen Original del Evento
             </label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-xl bg-white/50 hover:bg-slate-50 transition-colors relative">
-              <div className="space-y-1 text-center">
+            <div className="mt-1 flex justify-center p-2 border-2 border-slate-300 border-dashed rounded-xl bg-slate-50 hover:bg-slate-100/50 transition-colors w-full relative min-h-[150px]">
+              <div className="w-full text-center flex flex-col items-center justify-center">
                 {(imageFile || formData.imageUrl) ? (
-                  <div className="relative inline-block group">
+                  <div className="relative inline-block group w-full">
                     <img 
                       src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl} 
                       alt="Preview" 
-                      className="mx-auto h-32 w-auto object-cover rounded-lg shadow-sm"
+                      className="mx-auto w-full max-h-[500px] object-contain rounded-lg shadow-sm bg-black/5"
                     />
                     <button
                       type="button"

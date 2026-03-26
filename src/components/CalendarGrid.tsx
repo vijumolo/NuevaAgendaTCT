@@ -95,7 +95,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                 </div>
 
                 {/* Event Markers */}
-                <div className="absolute top-10 w-full left-0 px-2 flex flex-row flex-wrap justify-center gap-2 max-h-[90px] overflow-y-auto custom-scrollbar pb-1">
+                <div className="absolute top-10 w-full left-0 px-1 flex flex-row flex-wrap justify-start gap-[2%] max-h-[90px] overflow-y-auto custom-scrollbar pb-1">
                   {dayEvents.map(evt => {
                     const isPast = new Date(`${evt.startDate.includes('T') ? evt.startDate.split('T')[0] : evt.startDate}T00:00:00`) < new Date(new Date().setHours(0,0,0,0));
                     return (
@@ -103,7 +103,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                       key={evt.id}
                       onClick={() => onEditEvent(evt)}
                       className={clsx(
-                        "relative cursor-pointer shadow-md hover:-translate-y-1 hover:shadow-lg transition-all rounded-xl overflow-hidden group w-12 h-12 ring-2 ring-white/50 bg-slate-100 flex-shrink-0",
+                        "relative cursor-pointer shadow-md hover:-translate-y-1 hover:shadow-lg transition-all rounded-lg overflow-hidden group w-[31%] aspect-square ring-1 ring-white/50 bg-slate-100 flex-shrink-0",
                         isPast && "opacity-60 saturate-50 grayscale-[50%]"
                       )}
                       title={`${evt.name} - ${evt.responsible}${isPast ? ' (Finalizado)' : ''}`}
