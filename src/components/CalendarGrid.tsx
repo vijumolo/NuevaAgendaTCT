@@ -95,7 +95,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                 </div>
 
                 {/* Event Markers */}
-                <div className="absolute top-10 w-full left-0 px-2 flex flex-col gap-1 max-h-[90px] overflow-y-auto custom-scrollbar pr-1">
+                <div className="absolute top-10 w-full left-0 px-2 flex flex-row flex-wrap justify-center gap-2 max-h-[90px] overflow-y-auto custom-scrollbar pb-1">
                   {dayEvents.map(evt => {
                     const isPast = new Date(`${evt.startDate.includes('T') ? evt.startDate.split('T')[0] : evt.startDate}T00:00:00`) < new Date(new Date().setHours(0,0,0,0));
                     return (
@@ -103,20 +103,26 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                       key={evt.id}
                       onClick={() => onEditEvent(evt)}
                       className={clsx(
-                        "text-xs py-1 px-1.5 rounded-lg cursor-pointer shadow-sm hover:-translate-y-0.5 transition-transform flex items-center gap-2",
-                        getBadgeColor(evt.eventType),
-                        isPast && "opacity-60 saturate-50 line-through decoration-white/50"
+                        "relative cursor-pointer shadow-md hover:-translate-y-1 hover:shadow-lg transition-all rounded-xl overflow-hidden group w-12 h-12 ring-2 ring-white/50 bg-slate-100 flex-shrink-0",
+                        isPast && "opacity-60 saturate-50 grayscale-[50%]"
                       )}
                       title={`${evt.name} - ${evt.responsible}${isPast ? ' (Finalizado)' : ''}`}
                     >
-                      {evt.imageUrl && (
+                      {evt.imageUrl ? (
                         <img 
                           src={evt.imageUrl} 
-                          alt="" 
-                          className="w-5 h-5 rounded object-cover shrink-0 ring-1 ring-white/30" 
+                          alt={evt.name} 
+                          className="w-full h-full object-cover" 
                         />
+                      ) : (
+                        <div className={clsx("w-full h-full flex items-center justify-center text-[10px] font-bold text-center leading-tight p-0.5", getBadgeColor(evt.eventType))}>
+                          {evt.name.substring(0, 3).toUpperCase()}...
+                        </div>
                       )}
-                      <span className="truncate font-semibold">{evt.name}</span>
+                      {/* Tooltip text overlay on hover */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none p-1">
+                        <span className="text-white text-[8px] font-bold text-center truncate w-full">{evt.name}</span>
+                      </div>
                     </div>
                   )})}
                 </div>
